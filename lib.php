@@ -126,4 +126,52 @@ function flatten_array($array) {
     return $arr;
 }
 
+// Print a time interval in a human-readable format
+// Thank's to salladin from php.net manual comments for the base function, this one is an enhanced version
+function printTime($secs, $nosingleterm=false){
+    // Negative values = past in time
+    $positive = true;
+    if ($secs < 0) {
+        $positive = false;
+        $secs = -$secs; // we just compute the time with the opposite (a positive value)
+    }
+
+    // Breaking seconds into parts (years, weeks, days, etc..)
+    $bit = array(
+        'year'        => $secs / 31556926 % 12,
+        'week'        => $secs / 604800 % 52,
+        'day'        => $secs / 86400 % 7,
+        'hour'        => $secs / 3600 % 24,
+        'minute'    => $secs / 60 % 60,
+        'second'    => $secs % 60
+        );
+
+    // Fix linguistic issues
+    foreach($bit as $k => $v){
+        if($v > 1)$ret[] = $v . ' ' . $k . 's'; // if multiple items, append a 's'
+        // If only a single item, we don't add a 's', but we can remove the '1'
+        if($v == 1) {
+            // We can choose to remove the ' 1 ' with this optional parameter (so that you can print something like 'this resets every day' instead of 'this resets every 1 day')
+            $nosingleterm ? $ret[] = $k : $ret[] = $v . ' ' . $k;
+        }
+    }
+
+    // Beautify a bit more: add comma between n-1 terms, and the last gets separated by ' and '
+    if (count($ret) > 1) {
+        $ret1 = array();
+        $ret1[] = implode(', ', array_slice($ret, 0, count($ret)-1));
+        $ret1[] = $ret[count($ret)-1];
+        $ret = implode(' and ', $ret1);
+    // If there's only one element in the list, we just convert it to a string
+    } else {
+        $ret = $ret[0];
+    }
+
+    // Negative value = past in time, so we add ' ago' at the end
+    if (!$positive) $ret .= ' ago';
+
+    // Return the final result, a human-readable time
+    return $ret;
+}
+
 ?>

@@ -45,6 +45,7 @@ if (isset($_GET['page']) && $_GET['page'] >= 1 && $_GET['page'] <= $conf['maxpag
     <body>
 
         <h1>Chat Log Lister</h1>
+        <?php if ($conf['delay'] > 0) echo '<p>To limit abuses and stalking, logs are shown with a delay, thus you see the log starting from '.printTime(-$conf['delay']).'.</p>'; // message to notify users that there's a delay if one is set ?>
         Chat logs for server:
 	<select name="server_name" id="server_name" onchange="refresh_calendar();">
             <option value=""></option>
